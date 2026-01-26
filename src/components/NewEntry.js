@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native'
 import ModalWrapper from 'react-native-modal-wrapper'
 import { connect } from 'react-redux'
-import { saveEntry, cancelEntry } from '../actions/entryActions'
+import { saveEntry, cancelEntry, updateEntryContent } from '../actions/entryActions'
 
 const styles = StyleSheet.create({
   modal: {
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   }
 })
 
-function NewEntry({ title, defaultIncrement , isVisible, onCancel }){
+function NewEntry({ title, increment, content, isVisible, onCancel, onUpdateContent }){
   return (
     <ModalWrapper
       style={styles.modal}
@@ -60,8 +60,20 @@ function NewEntry({ title, defaultIncrement , isVisible, onCancel }){
           <Text style={styles.text}>{ title }</Text>
           <Button title="Save" onPress={ onCancel }/>
         </View>
-        <TextInput style={styles.input}>{ defaultIncrement }</TextInput>
-        <TextInput style={styles.input} ></TextInput>
+        <TextInput
+          style={styles.input}
+          value={increment}
+          onChangeText={(text) => onUpdateContent('increment', text)}
+          keyboardType="numeric"
+          placeholder="Increment"
+        />
+        <TextInput
+          style={styles.input}
+          value={content}
+          onChangeText={(text) => onUpdateContent('content', text)}
+          placeholder="Notes"
+          multiline
+        />
       </View>
     </ModalWrapper>
   )
@@ -70,11 +82,13 @@ function NewEntry({ title, defaultIncrement , isVisible, onCancel }){
 const mapStateToProps = state => ({
   isVisible: state.entryModal.isVisible,
   title: state.entryModal.title,
-  defaultIncrement: state.entryModal.defaultIncrement
+  increment: state.entryModal.increment,
+  content: state.entryModal.content
 })
 
 const mapDispatchToProps = dispatch => ({
-  onCancel: () => dispatch(cancelEntry())
+  onCancel: () => dispatch(cancelEntry()),
+  onUpdateContent: (field, value) => dispatch(updateEntryContent(field, value))
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(NewEntry)

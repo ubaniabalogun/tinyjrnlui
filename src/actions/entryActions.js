@@ -18,3 +18,11 @@ export function cancelEntry(){
     type: types.CANCEL_NEW_ENTRY
   }
 }
+
+export function updateEntryContent(field, value){
+  return {
+    type: types.UPDATE_ENTRY_CONTENT,
+    field,
+    value
+  }
+}
